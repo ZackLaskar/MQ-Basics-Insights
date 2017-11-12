@@ -1,0 +1,45 @@
+
+QM1 Source QMGR
+QM2 Destination QMGR
+
+runmqsc QM1
+
+    Define a remote Queue in QM1
+    DEFINE QR(QM1.RQ) RNAME(QM2.LQ) RQMNAME(QM2) XMITQ(QM1.XMITQ)
+
+    Define a Local Queue in QM1 as transmision or XMITQ
+    DEFINE QLOCAL(QM1.XMITQ) USAGE(XMITQ)
+
+    Define a Sender channel
+    DEFINE CHANNEL(TO.QM2) CHLTYPE(SDR) CONNNAME('HOSTNAME(1414)') XMITQ(QM1.XMITQ)
+
+-------------------------------------------------------------------------------
+
+runmqsc QM2
+
+    Define a local queue which is the RNAME above while defining remote queue.
+    DEFINE QLOCAL(QM2.LQ)
+
+    Define a listener with port 1414 and start the listener.
+    DEFINE LISTERNER(QM2.LSTR) TRPTYPE(TCP) PORT(1414)
+    START LISTENER(QM2.LSTR)
+
+    Define a Rcvr channel.
+    DEFINE CHANNEL(TO.QM2) CHLTYPE(RCVR)
+    
+    
+------------------------------------------------------------------------------
+
+Now start sender channel in QM1
+
+    START CHANNEL(TO.QM2)
+
+Post msg in remote queue using control command..
+    amqsput QM1.RQ QM1
+    
+Get the msg from local Q of QM2 using control command.
+    amqsget QM2.LQ QM2
+    
+------------------------------------------------------------------------------
+
+If we see msgs on the QM2.LQ of QM2 then point to point messaging is successfull.
