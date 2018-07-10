@@ -42,4 +42,4 @@ Get the msg from local Q of QM2 using control command.
     
 ------------------------------------------------------------------------------
 
-If we see msgs on the QM2.LQ of QM2 then point to point messaging is successfull.
+If we see msgs on the QM2.LQ of QM2 then point to point messaging is successful.
